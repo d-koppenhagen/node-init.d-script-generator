@@ -1,5 +1,6 @@
 # node-init.d-script-generator
 A shellscript which will create an init.d script for a nodejs application
+* you need to install `forever`
 
 ## Setup
 * just run `sudo ./createInitScript`

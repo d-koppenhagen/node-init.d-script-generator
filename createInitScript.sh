@@ -6,8 +6,8 @@ read SCRIPTNAME
 
 # copy initscript
 #cp "initscript" "/etc/init.d/$SCRIPTNAME"
-if [ ! -d "temp" ]; then
-    mkdir temp
+if [ ! -d "/temp" ]; then
+    mkdir /temp
 fi
 
 cp "initscript" "temp/$SCRIPTNAME"
@@ -29,12 +29,20 @@ read DESCRIPTION
  read APPPATH
  echo "Please enter the name of jour node startfile (e.g. server.js):"
  read APPFILE
+ echo -n "Would you like to restart apache2 after starting the service? (y/n) "
+   read APACHEOPTION
+   if echo "$APACHEOPTION" | grep -iq "^y" ;then
+     sed -i.bak s@"#APACHE_OPTION"@"service apache2 restart"@g /temp/$SCRIPTNAME
+   else
+     break;
+   fi
 
- sed -i.bak s@SCRIPTNAME_HEAD@"$SCRIPTNAME"@g temp/$SCRIPTNAME
- sed -i.bak s@DESCRIPTION_HEAD@"$DESCRIPTION"@g temp/$SCRIPTNAME
- sed -i.bak s@NAME=.*@"NAME=\"$SCRIPTNAME\""@g temp/$SCRIPTNAME
- sed -i.bak s@APPLICATION_DIR=.*@"APPLICATION_DIR=\"$APPPATH\""@g temp/$SCRIPTNAME
- sed -i.bak s@APPLICATION_FILE=.*@"APPLICATION_FILE=\"$APPFILE\""@g temp/$SCRIPTNAME
+ sed -i.bak s@SCRIPTNAME_HEAD@"$SCRIPTNAME"@g /temp/$SCRIPTNAME
+
+ sed -i.bak s@DESCRIPTION_HEAD@"$DESCRIPTION"@g /temp/$SCRIPTNAME
+ sed -i.bak s@NAME=.*@"NAME=\"$SCRIPTNAME\""@g /temp/$SCRIPTNAME
+ sed -i.bak s@APPLICATION_DIR=.*@"APPLICATION_DIR=\"$APPPATH\""@g /temp/$SCRIPTNAME
+ sed -i.bak s@APPLICATION_FILE=.*@"APPLICATION_FILE=\"$APPFILE\""@g /temp/$SCRIPTNAME
 
  echo "copying $SCRIPTNAME to /etc/init.d folder"
  cp temp/$SCRIPTNAME /etc/init.d
